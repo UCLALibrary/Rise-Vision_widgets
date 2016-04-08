@@ -3,16 +3,32 @@
 <head lang="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8">
-  <title>Whatever</title>
   <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.min.js"></script>
 </head>
 <body>
   <div id="libhours">Hours will be here.</div>
+  <!-- moustache template -->
+  <script id="template" type="x-tmpl-mustache">
+    <div>Location: {{ name }}</div>
+    <div>Hours: {{ rendered }}</div>
+    <div>{{ currently_open }}</div>
+  </script>
+  <!-- using seperate script tag for logic -->
   <script type='text/javascript'>
-    // $('#libhours').text('these are not the hours... hahahhaha.');
+    // make call to libHours with .getJSON (note: uses `&callback=?` to get JSONP wrapper! :-P)
     $.getJSON( "https://api3.libcal.com/api_hours_today.php?iid=3244&lid=2081&format=json&callback=?", function( data ) {
-        console.log(data);
-        $( "#libhours" ).text( data );
+      // check if location is currently open
+      if (data.locations[0].times.currently_open) {
+        data.locations[0].currently_open = "Currently Open";
+      } else {
+        data.locations[0].currently_open = "Currently Closed";
+      }
+      // fetch, parse, and render template
+      var template = $('#template').html();
+      Mustache.parse(template);
+      var rendered = Mustache.render(template, data.locations[0]);
+      $('#libhours').html(rendered);
     });
 </script>
 </body>
