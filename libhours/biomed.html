@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Whatever</title>
+  <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+</head>
+<body>
+  <div id="libhours">Hours will be here.</div>
+  <script type='text/javascript'>
+    // $('#libhours').text('these are not the hours... hahahhaha.');
+    $.getJSON( "https://api3.libcal.com/api_hours_today.php?iid=3244&lid=2081&format=json&callback=?", function( data ) {
+        console.log(data);
+        $( "#libhours" ).text( data );
+    });
+</script>
+</body>
+</html>
